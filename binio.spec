@@ -1,7 +1,10 @@
 %define name binio
 %define version 1.4
 %define release %mkrel 3
-%define libname %mklibname %name 1
+%define major 1
+%define libname %mklibname %name %major
+%define develname %mklibname -d %name
+%define staticname %mklibname -d -s %name
 %define fname libbinio
 
 Summary: Binary I/O stream class library
@@ -10,7 +13,7 @@ Version: %{version}
 Release: %{release}
 Source0: http://prdownloads.sourceforge.net/libbinio/%{fname}-%{version}.tar.bz2
 URL: http://libbinio.sourceforge.net
-License: LGPL
+License: LGPLv2+
 Group: System/Libraries
 BuildRoot: %{_tmppath}/%{name}-buildroot
 
@@ -43,16 +46,15 @@ arbitrary binary data sources.
 This package contains the shared library needed to run applications
 based on %name.
 
-%package -n %libname-devel
+%package -n %develname
 Summary: Development files for lib%name
 Group: Development/C++
 Provides: %name-devel = %version-%release
 Provides: lib%name-devel = %version-%release
 Requires: %libname = %version
-#gw: this package also has a file /usr/include/binio.h
-Conflicts: gromacs-devel
+Obsoletes: %mklibname -d %name 1
 
-%description -n %libname-devel
+%description -n %develname
 The binary I/O stream class library presents a platform-independent
 way to access binary data streams in C++.
 
@@ -66,12 +68,14 @@ arbitrary binary data sources.
 This package contains C++ header files, the shared library symlink and
 the developer documentation for %name.
 
-%package -n %libname-static-devel
+%package -n %staticname
 Summary: Static library for lib%name
 Group: Development/C++
-Requires: %libname-devel = %version
+Requires: %develname = %version
+Provides: lib%name-static-devel = %version-%release
+Obsoletes: %mklibname -s -d %name 1
 
-%description -n %libname-static-devel
+%description -n %staticname
 The binary I/O stream class library presents a platform-independent
 way to access binary data streams in C++.
 
@@ -101,18 +105,18 @@ rm -rf $RPM_BUILD_ROOT
 %post -n %libname -p /sbin/ldconfig
 %postun -n %libname -p /sbin/ldconfig
 
-%post -n %libname-devel
+%post -n %develname
 %_install_info libbinio.info
 
-%postun -n %libname-devel
+%postun -n %develname
 %_remove_install_info libbinio.info
 
 %files -n %libname
 %defattr(-,root,root)
 %doc README AUTHORS ChangeLog NEWS
-%_libdir/*.so.*
+%_libdir/libbinio.so.%{major}*
 
-%files -n %libname-devel
+%files -n %develname
 %defattr(-,root,root)
 %_includedir/libbinio/
 %_libdir/*.so
@@ -120,7 +124,7 @@ rm -rf $RPM_BUILD_ROOT
 %_infodir/*.info*
 %_libdir/pkgconfig/*
 
-%files -n %libname-static-devel
+%files -n %staticname
 %defattr(-,root,root)
 %_libdir/*.a
 
