@@ -12,7 +12,7 @@ Name: %{name}
 Version: %{version}
 Release: %{release}
 Source0: http://prdownloads.sourceforge.net/libbinio/%{fname}-%{version}.tar.bz2
-URL: http://libbinio.sourceforge.net
+URL: https://libbinio.sourceforge.net
 License: LGPLv2+
 Group: System/Libraries
 BuildRoot: %{_tmppath}/%{name}-buildroot
